@@ -4,13 +4,20 @@ local Sprint = require("scripts/extension_systems/character_state_machine/charac
 
 local function player_movement_valid_for_dodge()
     local player = Managers.player:local_player(1)
+    if player == nil then return false end
+    
     local player_unit = player.player_unit
     local archetype = player:profile().archetype
     local dodge_template = archetype.dodge
+    
     local input_extension = ScriptUnit.extension(player_unit, "input_system")
+    if input_extension == nil then return false end
+    
     local unit_data_extension = ScriptUnit.extension(player_unit, "unit_data_system")
-
+    if unit_data_extension == nil then return false end
+    
     local sprint_character_state_component = unit_data_extension:read_component("sprint_character_state")
+    if sprint_character_state_component == nil then return false end
 
     if Sprint.is_sprinting(sprint_character_state_component) then
         return false
